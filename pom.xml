@@ -45,7 +45,7 @@
             <resource>
                 <targetPath>.</targetPath>
                 <filtering>true</filtering>
-                <directory>.</directory>
+                <directory>src</directory>
                 <includes>
                     <include>plugin.yml</include>
                     <include>LICENSE</include>
