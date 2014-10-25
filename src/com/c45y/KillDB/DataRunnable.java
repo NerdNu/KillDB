@@ -3,6 +3,7 @@ package com.c45y.KillDB;
 import org.bukkit.entity.Player;
 
 import com.c45y.KillDB.database.DeathStat;
+import com.c45y.KillDB.database.PvPRating;
 
 class DataRunnable extends Thread
 {
@@ -21,11 +22,17 @@ class DataRunnable extends Thread
 		stat.setPlayerName(this.player.getName());
 		stat.setKillerName(this.killer.getName());
 		stat.setKillerItem(this.killer.getItemInHand().getType().toString());
-        String location = String.format("%s,%f,%f,%f", player.getWorld().getName(), player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
-        stat.setDeathLocation(location);
-        boolean is_armor_kill = plugin.HandleDeath.isArmorKill(killer, player);
-        stat.setArmorKill(is_armor_kill);
+		stat.setUsedInRating(true);
         stat.setTimestamp(System.currentTimeMillis());
+        int playerRating = this.plugin.pvpRatingTable.getPlayerRating(this.killer.getName());
+		int victimRating = this.plugin.pvpRatingTable.getPlayerRating(this.player.getName());
+        int[] gsArray = (new GearScore(this.player,playerRating,this.killer,killerRating)).getchange();
+        this.plugin.pvpRatingTable.updatePlayerRating(this.player.getName(), gsArray[0]); // Updates killer rating
+        this.plugin.pvpRatingTable.updatePlayerRating(this.killer.getName(), gsArray[1]); // Updates victim rating
+        stat.setRatingChange(gsArray[2]);
         this.plugin.deathStatTable.save(stat);
+        this.plugin.deathStatTable.cleanup(this.player,this.killer);
+        
+		
 	}
 }

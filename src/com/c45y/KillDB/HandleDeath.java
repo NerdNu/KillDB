@@ -39,9 +39,9 @@ public class HandleDeath implements Listener
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		int deaths = plugin.deathStatTable.getNumDeaths(ChatColor.stripColor(event.getPlayer().getName()));
-		int kills = plugin.deathStatTable.getNumKills(ChatColor.stripColor(event.getPlayer().getName()));
-		plugin.getLogger().info(event.getPlayer().getName() + " + K:D - Deaths: " + deaths + " Kills: " + kills);
+		//int deaths = plugin.deathStatTable.getNumDeaths(ChatColor.stripColor(event.getPlayer().getName()));
+		//int kills = plugin.deathStatTable.getNumKills(ChatColor.stripColor(event.getPlayer().getName()));
+		//plugin.getLogger().info(event.getPlayer().getName() + " + K:D - Deaths: " + deaths + " Kills: " + kills);
 	}
 
 	public boolean isArmorKill(Player attacker, Player dead_guy) {

@@ -15,21 +15,24 @@ import com.c45y.KillDB.database.DeathStatTable;
 
 public class KillDB extends JavaPlugin
 {
-	public final HandleDeath HandleDeath = new HandleDeath(this);
+	public final HandleDeath handleDeath = new HandleDeath(this);
 	Logger log = Logger.getLogger("Minecraft");
 	DeathStatTable deathStatTable;
+	PvPRatingTable pvpRatingTable;
 	public boolean logDeathItems = false;
 
 	public void onEnable() {
 		setupDatabase();
 		deathStatTable = new DeathStatTable(this);
+		pvpRatingTable = new PvPRatingTable(this);
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvents(HandleDeath, this);
+		pm.registerEvents(handleDeath, this);
 	}
 	
 	public boolean setupDatabase() {
         try {
             getDatabase().find(DeathStat.class).findRowCount();
+            getDatabase().find(PvPRating.class).findRowCount();
         } catch (PersistenceException ex) {
             getLogger().log(Level.INFO, "First run, initializing database.");
             installDDL();
