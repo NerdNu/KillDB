@@ -37,20 +37,30 @@ public class KillDB extends JavaPlugin
 	public boolean setupDatabase() {
         try {
             getDatabase().find(DeathStat.class).findRowCount();
-            getDatabase().find(PvPRating.class).findRowCount();
         } catch (PersistenceException ex) {
             getLogger().log(Level.INFO, "First run, initializing database.");
             installDDL();
             return true;
         }
         
+        try {
+            getDatabase().find(PvPRating.class).findRowCount();
+        } catch (PersistenceException ex) {
+            getLogger().log(Level.INFO, "First run, initializing database.");
+            installDDL();
+            return true;
+        }
         return false;
     }
         
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
         Player player = (Player)sender;
 	if(commandLabel.equalsIgnoreCase("rating")){
-            sender.sendMessage("" + args[0] + " has a rating of " + this.pvpRatingTable.getPlayerRating(args[0]));
+            try{
+                sender.sendMessage("" + args[0] + " has a rating of " + this.pvpRatingTable.getPlayerRating(args[0]));
+            }catch(Exception e){
+                sender.sendMessage("" + args[0] + " has a rating of 500");
+            }
 	}		
 	return true;
     }

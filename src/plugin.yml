@@ -2,7 +2,12 @@ name: StrikeDeath
 main: com.c45y.KillDB.KillDB
 version: 0.3
 database: true
+permissions:
+    KillDB.perms:
+        description: Can check ratings
+        default: true
 commands:
     rating:
         description: Returns the rating of the player.
-        usage: /rating
+        permission: KillDB.perms
+        usage: /rating [player]

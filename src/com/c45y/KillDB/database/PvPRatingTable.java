@@ -13,10 +13,15 @@ public class PvPRatingTable {
 
 	public int getPlayerRating(String player){
 		int rating = 500;
-		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player).query();
+		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().eq("playerName", player).query();
 		
 		if (query != null){
-			rating = query.findUnique().getRating();
+			PvPRating result = query.findUnique();
+                        if (result.getPlayerName().equalsIgnoreCase(player)){
+                            return result.getRating();
+                        }else{
+                            return 500;
+                        }
 		}
 		
 		return rating;
@@ -24,7 +29,7 @@ public class PvPRatingTable {
 	
 	public void updatePlayerRating(String player, int newRating){
 		PvPRating pvprating;
-		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player).query();
+		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().eq("playerName", player).query();
 		
 		if (query != null){
 			pvprating = query.findUnique();
@@ -34,7 +39,7 @@ public class PvPRatingTable {
 			pvprating.setPlayerName(player);
 			pvprating.setRating(newRating);
 		}
-		this.save(pvprating);
+		plugin.getDatabase().save(pvprating);
 	}
 	
 	public PvPRating getRequest(int id) {
