@@ -1,5 +1,7 @@
 package com.c45y.KillDB;
 
+import java.util.Map;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -10,7 +12,7 @@ public class GearScore {
     private Player victim;
     private int victimRating;
 	
-	private double killerOffense = 0.0;
+    private double killerOffense = 0.0;
     private double killerFireOffense = 0.0;
     private double killerRangedOffense = 0.0;
     private double killerDefense = 0.0;
@@ -86,21 +88,21 @@ public class GearScore {
         	change = 200.0;
         }
         int changeOfRating = (int)change;
-        int newKillerRating = this.killerRating + change;
-        int newVictimRating = this.victimRating - change;
+        int newKillerRating = this.killerRating + changeOfRating;
+        int newVictimRating = this.victimRating - changeOfRating;
     	
     	int[] resultArray = {newVictimRating, newKillerRating, changeOfRating};
     	return resultArray;
     }
     
     public double[] getGS(Player player){
-    	double[] results;
+    	double[] results = null;
     	
     	double[][] totalGear = new double[5][];
-    	totalGear[0] = itemScore(player.getHelmet());
-    	totalGear[1] = itemScore(player.getChestplate());
-    	totalGear[2] = itemScore(player.getLeggings());
-    	totalGear[3] = itemScore(player.getBoots());
+    	totalGear[0] = itemScore(player.getInventory().getHelmet());
+    	totalGear[1] = itemScore(player.getInventory().getChestplate());
+    	totalGear[2] = itemScore(player.getInventory().getLeggings());
+    	totalGear[3] = itemScore(player.getInventory().getBoots());
     	totalGear[4] = itemScore(player.getItemInHand());
     	
     	for(int i=0;i<6;i++){
@@ -115,10 +117,10 @@ public class GearScore {
     	String name = item.getType().toString().toLowerCase();
     	double offense = 0.0;
     	double fireOffense = 0.0;
-    	double rangeOffense = 0.0;
+    	double rangedOffense = 0.0;
     	double defense = 0.0;
     	double fireDefense = 0.0;
-    	double rangeDefense = 0.0;
+    	double rangedDefense = 0.0;
     	if(name.equals("air")){
     	}
     	else if(name.contains("helmet")){
@@ -263,23 +265,24 @@ public class GearScore {
     	else if(name.contains("hoe")){
     		offense += 1;
     	}
-    	double[] enchants = enchantScore(name,item.getEnchants());
+    	double[] enchants = enchantScore(name,item.getEnchantments());
     	offense += enchants[0];
     	fireOffense += enchants[1];
     	rangedOffense += enchants[2];
     	defense += (1-defense) * enchants[3];
     	fireDefense += enchants[4];
     	rangedDefense += enchants[5];
+        double[] results = {offense, fireOffense, rangedOffense, defense, fireDefense, rangedDefense};
     	return results;
     }
     
     public double[] enchantScore(String item,Map<Enchantment,Integer> enchants){
     	double offense = 0.0;
     	double fireOffense = 0.0;
-    	double rangeOffense = 0.0;
+    	double rangedOffense = 0.0;
     	double defense = 0.0;
     	double fireDefense = 0.0;
-    	double rangeDefense = 0.0;
+    	double rangedDefense = 0.0;
     	for(Enchantment e : enchants.keySet()){
     		String name = e.getName();
     		if(item.contains("sword")||item.contains("axe")||item.contains("spade")){
@@ -295,7 +298,7 @@ public class GearScore {
     				}
     			}
     		}
-    		else if(item.contains("bow"){
+    		else if(item.contains("bow")){
     			if(name.equals("ARROW_DAMAGE")){ // Power
     				if(enchants.get(e) == 1){
     					rangedOffense += 4.0;
@@ -336,7 +339,7 @@ public class GearScore {
     			}
     			else if(name.equals("PROTECTION_PROJECTILE")){
     				if(enchants.get(e) < 4){
-    					rangedDefense += (.03 * ((2*enchants.get(e))+1))
+    					rangedDefense += (.03 * ((2*enchants.get(e))+1));
     				}
     				else{
     					rangedDefense += .33;
@@ -354,8 +357,8 @@ public class GearScore {
     				}
     			}
     		}
-    		double[] results = {offense,fireOffense,rangeOffense,defense,fireDefense,rangeDefense};
-    		return results;
     	}
+        double[] results = {offense,fireOffense,rangedOffense,defense,fireDefense,rangedDefense};
+    	return results;
     }
 }

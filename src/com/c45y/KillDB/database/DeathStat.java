@@ -59,7 +59,7 @@ public class DeathStat {
 		this.usedInRating = used;
 	}
 	
-	public String getUsedInRating() {
+	public boolean getUsedInRating() {
 		return this.usedInRating;
 	}
 

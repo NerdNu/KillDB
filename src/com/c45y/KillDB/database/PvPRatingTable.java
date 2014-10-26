@@ -16,7 +16,7 @@ public class PvPRatingTable {
 		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player).query();
 		
 		if (query != null){
-			rating = query.getUnique().getRating();
+			rating = query.findUnique().getRating();
 		}
 		
 		return rating;
@@ -27,7 +27,7 @@ public class PvPRatingTable {
 		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player).query();
 		
 		if (query != null){
-			pvprating = query.getUnique();
+			pvprating = query.findUnique();
 			pvprating.setRating(newRating);
 		}else{
 			pvprating = new PvPRating();
@@ -40,7 +40,7 @@ public class PvPRatingTable {
 	public PvPRating getRequest(int id) {
 		PvPRating retVal = null;
 		
-		Query<DeathStat> query = plugin.getDatabase().find(PvPRating.class).where().eq("id", id).query();
+		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().eq("id", id).query();
 		
 		if (query != null) {
 			retVal = query.findUnique();
