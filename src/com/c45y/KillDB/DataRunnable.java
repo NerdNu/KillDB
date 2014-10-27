@@ -23,7 +23,7 @@ class DataRunnable extends Thread
             stat.setPlayerName(this.player.getName());
             stat.setKillerName(this.killer.getName());
             stat.setKillerItem(this.killer.getItemInHand().getType().toString());
-            stat.setUsedInRating(true);
+            stat.setUsedInRating(1);
             stat.setTimestamp(System.currentTimeMillis());
             int killerRating = this.plugin.pvpRatingTable.getPlayerRating(this.killer.getName().toLowerCase());
             int playerRating = this.plugin.pvpRatingTable.getPlayerRating(this.player.getName().toLowerCase());

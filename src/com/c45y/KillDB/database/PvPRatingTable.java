@@ -13,7 +13,7 @@ public class PvPRatingTable {
 
 	public int getPlayerRating(String player){
 		int rating = 500;
-		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().eq("playerName", player.toLowerCase()).query();
+		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player.toLowerCase()).query();
 		
 		if (query != null){
 			try{
@@ -34,7 +34,7 @@ public class PvPRatingTable {
 	public void updatePlayerRating(String player, int newRating){
 		PvPRating pvprating;
 		try{
-                    Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().eq("playerName", player.toLowerCase()).query();
+                    Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player.toLowerCase()).query();
 		
                     if (query != null){
                             pvprating = query.findUnique();

@@ -17,7 +17,7 @@ public class DeathStat {
 	private String playerName;
 	private String killerName;
 	private String killerItem;
-	private boolean usedInRating;
+	private int usedInRating;
 	
 	@NotNull
 	private long timestamp;
@@ -55,11 +55,11 @@ public class DeathStat {
 		return this.killerItem;
 	}
 	
-	public void setUsedInRating(boolean used) {
+	public void setUsedInRating(int used) {
 		this.usedInRating = used;
 	}
 	
-	public boolean getUsedInRating() {
+	public int getUsedInRating() {
 		return this.usedInRating;
 	}
 

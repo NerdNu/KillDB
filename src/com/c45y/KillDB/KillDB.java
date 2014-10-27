@@ -48,7 +48,7 @@ public class KillDB extends JavaPlugin
             }catch(Exception e){
                 sender.sendMessage("" + args[0] + " has a rating of 500");
             }
-	}		
+	}
 	return true;
     }
 	
