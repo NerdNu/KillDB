@@ -17,11 +17,11 @@ public class DeathStat {
 	private String playerName;
 	private String killerName;
 	private String killerItem;
-	private String deathLocation;
+	private int usedInRating;
 	
 	@NotNull
-	private boolean armorKill;
 	private long timestamp;
+	private int ratingChange;
 	
 	public void setId(int id) {
 		this.id = id;
@@ -32,7 +32,7 @@ public class DeathStat {
 	}
 	
 	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
+		this.playerName = playerName.toLowerCase();
 	}
 	
 	public String getPlayerName() {
@@ -40,7 +40,7 @@ public class DeathStat {
 	}
 	
 	public void setKillerName(String killerName) {
-		this.killerName = killerName;
+		this.killerName = killerName.toLowerCase();
 	}
 	
 	public String getKillerName() {
@@ -55,20 +55,12 @@ public class DeathStat {
 		return this.killerItem;
 	}
 	
-	public void setDeathLocation(String deathLocation) {
-		this.deathLocation = deathLocation;
+	public void setUsedInRating(int used) {
+		this.usedInRating = used;
 	}
 	
-	public String getDeathLocation() {
-		return this.deathLocation;
-	}
-	
-	public void setArmorKill(boolean armorKill) {
-		this.armorKill = armorKill;
-	}
-	
-	public boolean getArmorKill() {
-		return this.armorKill;
+	public int getUsedInRating() {
+		return this.usedInRating;
 	}
 
 	public long getTimestamp() {
@@ -77,5 +69,13 @@ public class DeathStat {
 
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+	
+	public void setRatingChange(int ratingChange){
+		this.ratingChange = ratingChange;
+	}
+	
+	public int getRatingChange(){
+		return ratingChange;
 	}
 }
