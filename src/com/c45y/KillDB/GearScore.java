@@ -75,7 +75,7 @@ public class GearScore {
     	this.victimFireOffense *= (1 - this.killerFireDefense);
     	this.victimOffense += this.victimFireOffense;
     	
-    	double change = 20; // Default change value assuming equal gear and rating.
+    	double change = 20.0; // Default change value assuming equal gear and rating.
     	
     	if (this.victimOffense > this.killerOffense){ // Sets a maximum of 50 points change based off of gear
             change += ((this.victimOffense - this.killerOffense)/25.25) * 30.0;
@@ -83,7 +83,7 @@ public class GearScore {
         if (this.killerOffense > this.victimOffense){
             change -= ((this.killerOffense - this.victimOffense)/25.25) * 15.0;
         }
-        change *= (this.victimRating/this.killerRating);
+        change *= ((double)this.victimRating/(double)this.killerRating);
         if (change > 200.0){ // Hard cap of 200
         	change = 200.0;
         }
@@ -96,8 +96,8 @@ public class GearScore {
     }
     
     public double[] getGS(Player player){
-    	double[] results = null;
-    	
+    	double[] results = {0.0,0.0,0.0,0.0,0.0,0.0};
+
     	double[][] totalGear = new double[5][];
     	totalGear[0] = itemScore(player.getInventory().getHelmet());
     	totalGear[1] = itemScore(player.getInventory().getChestplate());
@@ -114,22 +114,26 @@ public class GearScore {
     }
     
     public double[] itemScore(ItemStack item){
-    	String name = item.getType().toString().toLowerCase();
-    	double offense = 0.0;
-    	double fireOffense = 0.0;
-    	double rangedOffense = 0.0;
-    	double defense = 0.0;
-    	double fireDefense = 0.0;
-    	double rangedDefense = 0.0;
-    	if(name.equals("air")){
-    	}
-    	else if(name.contains("helmet")){
-    		if(name.contains("leather")){
-    			defense += .04;
-    		}
-    		else if(name.contains("gold")){
-    			defense += .08;
-    		}
+    	if(item == null){
+            double[] nullArray = {0.0,0.0,0.0,0.0,0.0,0.0};
+            return nullArray;
+        }else{
+            String name = item.getType().toString().toLowerCase();
+            double offense = 0.0;
+            double fireOffense = 0.0;
+            double rangedOffense = 0.0;
+            double defense = 0.0;
+            double fireDefense = 0.0;
+            double rangedDefense = 0.0;
+            if(name.equals("air")){
+            }
+            else if(name.contains("helmet")){
+                    if(name.contains("leather")){
+                            defense += .04;
+                    }
+                    else if(name.contains("gold")){
+                            defense += .08;
+                    }
     		else if(name.contains("chain")){
     			defense += .08;
     		}
@@ -274,6 +278,7 @@ public class GearScore {
     	rangedDefense += enchants[5];
         double[] results = {offense, fireOffense, rangedOffense, defense, fireDefense, rangedDefense};
     	return results;
+        }
     }
     
     public double[] enchantScore(String item,Map<Enchantment,Integer> enchants){

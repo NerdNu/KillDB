@@ -3,7 +3,6 @@ package com.c45y.KillDB.database;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import com.avaje.ebean.validation.NotNull;
 
 @Entity()
@@ -26,7 +25,7 @@ public class PvPRating {
 	}
 	
 	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
+		this.playerName = playerName.toLowerCase();
 	}
 	
 	public String getPlayerName() {

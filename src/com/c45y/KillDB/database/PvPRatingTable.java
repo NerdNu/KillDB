@@ -13,13 +13,17 @@ public class PvPRatingTable {
 
 	public int getPlayerRating(String player){
 		int rating = 500;
-		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().eq("playerName", player).query();
+		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().eq("playerName", player.toLowerCase()).query();
 		
 		if (query != null){
-			PvPRating result = query.findUnique();
-                        if (result.getPlayerName().equalsIgnoreCase(player)){
-                            return result.getRating();
-                        }else{
+			try{
+                            PvPRating result = query.findUnique();
+                            if (result.getPlayerName().equalsIgnoreCase(player.toLowerCase())){
+                                return result.getRating();
+                            }else{
+                                return 500;
+                            }
+                        }catch(Exception ex){
                             return 500;
                         }
 		}
@@ -29,17 +33,20 @@ public class PvPRatingTable {
 	
 	public void updatePlayerRating(String player, int newRating){
 		PvPRating pvprating;
-		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().eq("playerName", player).query();
+		try{
+                    Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().eq("playerName", player.toLowerCase()).query();
 		
-		if (query != null){
-			pvprating = query.findUnique();
-			pvprating.setRating(newRating);
-		}else{
+                    if (query != null){
+                            pvprating = query.findUnique();
+                            pvprating.setRating(newRating);
+                            plugin.getDatabase().save(pvprating);
+                    }
+		}catch(Exception ex){
 			pvprating = new PvPRating();
-			pvprating.setPlayerName(player);
+			pvprating.setPlayerName(player.toLowerCase());
 			pvprating.setRating(newRating);
+                        plugin.getDatabase().save(pvprating);
 		}
-		plugin.getDatabase().save(pvprating);
 	}
 	
 	public PvPRating getRequest(int id) {

@@ -28,7 +28,11 @@ public class DeathStatTable {
 	
 	public void cleanup(Player victim, Player killer){
 		while(true){
-			Query<DeathStat> killQuery = plugin.getDatabase().find(DeathStat.class).where().ieq("killerName", killer.getName()).ieq("victimName", victim.getName()).ieq("usedInRating", "true").query();
+			Query<DeathStat> killQuery = plugin.getDatabase().find(
+                                DeathStat.class).where().ieq("killerName", 
+                                        killer.getName().toLowerCase()).ieq("playerName",
+                                                victim.getName().toLowerCase()).ieq("usedInRating", 
+                                                        "true").query();
 			if(killQuery != null){
 				if(killQuery.findRowCount() > 10){
 					List<DeathStat> killList = killQuery.findList();
@@ -39,10 +43,10 @@ public class DeathStatTable {
 							earliest = stat;
 						}
 					}
-					this.plugin.pvpRatingTable.updatePlayerRating(earliest.getKillerName(),
-							(this.plugin.pvpRatingTable.getPlayerRating(earliest.getKillerName())-earliest.getRatingChange()));
-					this.plugin.pvpRatingTable.updatePlayerRating(earliest.getPlayerName(),
-							(this.plugin.pvpRatingTable.getPlayerRating(earliest.getPlayerName())+earliest.getRatingChange()));
+					this.plugin.pvpRatingTable.updatePlayerRating(earliest.getKillerName().toLowerCase(),
+							(this.plugin.pvpRatingTable.getPlayerRating(earliest.getKillerName().toLowerCase())-earliest.getRatingChange()));
+					this.plugin.pvpRatingTable.updatePlayerRating(earliest.getPlayerName().toLowerCase(),
+							(this.plugin.pvpRatingTable.getPlayerRating(earliest.getPlayerName().toLowerCase())+earliest.getRatingChange()));
 					earliest.setUsedInRating(false);
 					this.save(earliest);
 				}else{
@@ -60,10 +64,10 @@ public class DeathStatTable {
                                 limit.setTimestamp(System.currentTimeMillis() - 1209600000L);
 				for(DeathStat stat : timeList){
 					if(stat.getTimestamp() < limit.getTimestamp()){
-						this.plugin.pvpRatingTable.updatePlayerRating(stat.getKillerName(),
-								(this.plugin.pvpRatingTable.getPlayerRating(stat.getKillerName())-stat.getRatingChange()));
-						this.plugin.pvpRatingTable.updatePlayerRating(stat.getPlayerName(),
-								(this.plugin.pvpRatingTable.getPlayerRating(stat.getPlayerName())+stat.getRatingChange()));
+						this.plugin.pvpRatingTable.updatePlayerRating(stat.getKillerName().toLowerCase(),
+								(this.plugin.pvpRatingTable.getPlayerRating(stat.getKillerName().toLowerCase())-stat.getRatingChange()));
+						this.plugin.pvpRatingTable.updatePlayerRating(stat.getPlayerName().toLowerCase(),
+								(this.plugin.pvpRatingTable.getPlayerRating(stat.getPlayerName().toLowerCase())+stat.getRatingChange()));
 						stat.setUsedInRating(false);
 					}
 				}
