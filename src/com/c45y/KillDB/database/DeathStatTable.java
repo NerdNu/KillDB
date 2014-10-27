@@ -53,16 +53,12 @@ public class DeathStatTable {
 		}
                 timeDecay:
 		while(true){
-                    System.out.println("while 2");
 			Map<?,DeathStat> timeMap = plugin.getDatabase().find(DeathStat.class).where().eq("usedInRating", 1).findMap();
 			if(timeMap != null){
-                            System.out.println("for 2-1");
 				DeathStat limit = new DeathStat();
                                 limit.setTimestamp(System.currentTimeMillis() - 1209600000L);
 				for(Object entry : timeMap.keySet()){
-                                    System.out.println("for 2");
 					if(timeMap.get(entry).getTimestamp() < limit.getTimestamp()){
-                                            System.out.println("if 2-2");
 						this.plugin.pvpRatingTable.updatePlayerRating(timeMap.get(entry).getKillerName().toLowerCase(),
 								(this.plugin.pvpRatingTable.getPlayerRating(timeMap.get(entry).getKillerName().toLowerCase())-timeMap.get(entry).getRatingChange()));
 						this.plugin.pvpRatingTable.updatePlayerRating(timeMap.get(entry).getPlayerName().toLowerCase(),
@@ -74,7 +70,6 @@ public class DeathStatTable {
                                         }
 				}
 			}else{
-                            System.out.println("while 2 else");
 				break;
 			}
 		}

@@ -32,9 +32,7 @@ class DataRunnable extends Thread
             this.plugin.pvpRatingTable.updatePlayerRating(this.killer.getName().toLowerCase(), gsArray[1]); // Updates victim rating
             stat.setRatingChange(gsArray[2]);
             this.plugin.deathStatTable.save(stat);
-            System.out.println("cleaning");
             this.plugin.deathStatTable.cleanup(this.player,this.killer);
-            System.out.println("cleaned");
         
 		
 	}
