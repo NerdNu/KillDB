@@ -11,3 +11,7 @@ commands:
         description: Returns the rating of the player.
         permission: KillDB.perms
         usage: /rating [player]
+    top5:
+        description: Returns the top 5 players and their rating.
+        permission: KillDB.perms
+        usage: /top5

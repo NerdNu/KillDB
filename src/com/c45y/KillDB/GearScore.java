@@ -1,16 +1,26 @@
 package com.c45y.KillDB;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
+import java.util.Properties;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 public class GearScore {
-    private Player killer;
-    private int killerRating;
-    private Player victim;
-    private int victimRating;
+    private static double baseChange;
+    private static double gearMax;
+    private static double gearMin;
+    private static int hardCap;
+    
+    private final Player killer;
+    private final int killerRating;
+    private final Player victim;
+    private final int victimRating;
 	
     private double killerOffense = 0.0;
     private double killerFireOffense = 0.0;
@@ -75,17 +85,17 @@ public class GearScore {
     	this.victimFireOffense *= (1 - this.killerFireDefense);
     	this.victimOffense += this.victimFireOffense;
     	
-    	double change = 20.0; // Default change value assuming equal gear and rating.
+    	double change = baseChange;
     	
-    	if (this.victimOffense > this.killerOffense){ // Sets a maximum of 50 points change based off of gear
-            change += ((this.victimOffense - this.killerOffense)/25.25) * 30.0;
+    	if (this.victimOffense > this.killerOffense){
+            change += ((this.victimOffense - this.killerOffense)/25.25) * (gearMax - baseChange);
     	}
         if (this.killerOffense > this.victimOffense){
-            change -= ((this.killerOffense - this.victimOffense)/25.25) * 15.0;
+            change -= ((this.killerOffense - this.victimOffense)/25.25) * (baseChange - gearMin);
         }
         change *= ((double)this.victimRating/(double)this.killerRating);
-        if (change > 200.0){ // Hard cap of 200
-        	change = 200.0;
+        if (change > hardCap){ 
+        	change = hardCap;
         }
         int changeOfRating = (int)change;
         int newKillerRating = this.killerRating + changeOfRating;
@@ -365,5 +375,34 @@ public class GearScore {
     	}
         double[] results = {offense,fireOffense,rangedOffense,defense,fireDefense,rangedDefense};
     	return results;
+    }
+    
+    public static void setUp(){
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("plugins/StrikeDeath/config.properties"));
+            baseChange = Double.parseDouble(properties.getProperty("baseChange"));
+            gearMax = Double.parseDouble(properties.getProperty("gearMax"));
+            gearMin = Double.parseDouble(properties.getProperty("gearMin"));
+            hardCap = Integer.parseInt(properties.getProperty("hardCap"));
+        } catch (IOException e) {
+            try {
+                Properties props = new Properties();
+                props.setProperty("baseChange", "20.0");
+                baseChange = 20.0;
+                props.setProperty("gearMax", "50.0");
+                gearMax = 50.0;
+                props.setProperty("gearMin", "5.0");
+                gearMin = 5.0;
+                props.setProperty("hardCap", "200");
+                hardCap = 200;
+                File f = new File("plugins/StrikeDeath/config.properties");
+                OutputStream out = new FileOutputStream( f );
+                props.store(out, "Initial file creation");
+            }
+            catch (IOException ex ) {
+                ex.printStackTrace();
+            }
+        }
     }
 }

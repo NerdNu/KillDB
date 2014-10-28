@@ -33,7 +33,6 @@ public class HandleDeath implements Listener
 			}
 			DataRunnable dr = new DataRunnable(this.plugin, player, player.getKiller());
 			dr.start();
-
 		}
 	}
 
