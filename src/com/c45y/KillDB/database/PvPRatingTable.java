@@ -2,6 +2,7 @@ package com.c45y.KillDB.database;
 
 import com.avaje.ebean.Query;
 import com.c45y.KillDB.KillDB;
+import java.util.Map;
 
 public class PvPRatingTable {
 
@@ -57,47 +58,83 @@ public class PvPRatingTable {
 			pvprating.setRating(newRating);
                         plugin.getDatabase().save(pvprating);
 		}
-                if(newRating > firstRating){
-                    fifth = fourth;
-                    fifthRating = fourthRating;
-                    fourth = third;
-                    fourthRating = thirdRating;
-                    third = second;
-                    thirdRating = secondRating;
-                    second = first;
-                    secondRating = firstRating;
-                    first = player;
-                    firstRating = newRating;
-                }else if(newRating > secondRating && !player.equals(first)){
-                    fifth = fourth;
-                    fifthRating = fourthRating;
-                    fourth = third;
-                    fourthRating = thirdRating;
-                    third = second;
-                    thirdRating = secondRating;
-                    second = player;
-                    secondRating = newRating;
-                }else if(newRating > thirdRating && !player.equals(first) && !player.equals(second)){
-                    fifth = fourth;
-                    fifthRating = fourthRating;
-                    fourth = third;
-                    fourthRating = thirdRating;
-                    third = player;
-                    thirdRating = newRating;
-                }else if(newRating > fourthRating && !player.equals(first) && !player.equals(second) && !player.equals(third)){
-                    fifth = fourth;
-                    fifthRating = fourthRating;
-                    fourth = player;
-                    fourthRating = newRating;
-                }else if(newRating > fifthRating && !player.equals(first) && !player.equals(second) && !player.equals(third) && !player.equals(fourth)){
-                    fifth = player;
-                    fifthRating = newRating;
-                }
+                updateTop5(player,newRating);
 	}
+        
+        public void loadTop5(){
+            Map<?,PvPRating> map = plugin.getDatabase().find(PvPRating.class).findMap();
+            for(Object entry : map.keySet()){
+                updateTop5(map.get(entry).getPlayerName(),map.get(entry).getRating());
+            }
+        }
+        
+        public void updateTop5(String player, int rating){
+            if(player.equalsIgnoreCase(first)||player.equalsIgnoreCase(second)||player.equalsIgnoreCase(third)||player.equalsIgnoreCase(fourth)||player.equalsIgnoreCase(fifth)){
+                if(player.equalsIgnoreCase(first)){
+                    firstRating = rating;
+                }else if(player.equalsIgnoreCase(second)){
+                    secondRating = rating;
+                }else if(player.equalsIgnoreCase(third)){
+                    thirdRating = rating;
+                }else if(player.equalsIgnoreCase(fourth)){
+                    fourthRating = rating;
+                }else if(player.equalsIgnoreCase(fifth)){
+                    fifthRating = rating;
+                }
+            }else if(rating > firstRating){
+                fifth = fourth;
+                fifthRating = fourthRating;
+                fourth = third;
+                fourthRating = thirdRating;
+                third = second;
+                thirdRating = secondRating;
+                second = first;
+                secondRating = firstRating;
+                first = player;
+                firstRating = rating;
+            }else if(rating > secondRating && !player.equals(first)){
+                fifth = fourth;
+                fifthRating = fourthRating;
+                fourth = third;
+                fourthRating = thirdRating;
+                third = second;
+                thirdRating = secondRating;
+                second = player;
+                secondRating = rating;
+            }else if(rating > thirdRating && !player.equals(first) && !player.equals(second)){
+                fifth = fourth;
+                fifthRating = fourthRating;
+                fourth = third;
+                fourthRating = thirdRating;
+                third = player;
+                thirdRating = rating;
+            }else if(rating > fourthRating && !player.equals(first) && !player.equals(second) && !player.equals(third)){
+                fifth = fourth;
+                fifthRating = fourthRating;
+                fourth = player;
+                fourthRating = rating;
+            }else if(rating > fifthRating && !player.equals(first) && !player.equals(second) && !player.equals(third) && !player.equals(fourth)){
+                fifth = player;
+                fifthRating = rating;
+            }
+        }
         
         public void cleanupTop5(){
             String tempName = "";
             int tempRating = 0;
+            if(second.equalsIgnoreCase(first)){
+                second = "";
+                secondRating = 0;
+            }else if(third.equalsIgnoreCase(first)||third.equalsIgnoreCase(second)){
+                third = "";
+                thirdRating = 0;
+            }else if(fourth.equalsIgnoreCase(first)||fourth.equalsIgnoreCase(second)||fourth.equalsIgnoreCase(third)){
+                fourth = "";
+                fourthRating = 0;
+            }else if(fifth.equalsIgnoreCase(first)||fifth.equalsIgnoreCase(second)||fifth.equalsIgnoreCase(third)||fifth.equalsIgnoreCase(fourth)){
+                fifth = "";
+                fifthRating = 0;
+            }
             if(fifthRating > fourthRating){
                 tempName = fourth;
                 tempRating = fourthRating;

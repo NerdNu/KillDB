@@ -31,6 +31,7 @@ public class KillDB extends JavaPlugin
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(handleDeath, this);
                 GearScore.setUp();
+                pvpRatingTable.loadTop5();
 	}
 	
 	public void setupDatabase() {
