@@ -30,19 +30,19 @@ public class KillDB extends JavaPlugin
 		pvpRatingTable = new PvPRatingTable(this);
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(handleDeath, this);
-                GearScore.setUp();
-                pvpRatingTable.loadTop5();
+        GearScore.setUp(this);
+        pvpRatingTable.loadTop5();
 	}
 	
 	public void setupDatabase() {
-            try {
-                this.getDatabase().find(PvPRating.class).findRowCount();
-                this.getDatabase().find(DeathStat.class).findRowCount();
-            } catch (PersistenceException ex) {
-                getLogger().log(Level.INFO, "First run, initializing database.");
-                installDDL();
-            }
+        try {
+            this.getDatabase().find(PvPRating.class).findRowCount();
+            this.getDatabase().find(DeathStat.class).findRowCount();
+        } catch (PersistenceException ex) {
+            getLogger().log(Level.INFO, "First run, initializing database.");
+            installDDL();
         }
+    }
         
         public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
             if(commandLabel.equalsIgnoreCase("rating")){
@@ -87,7 +87,7 @@ public class KillDB extends JavaPlugin
                         color = ChatColor.YELLOW;
                     }
                     sender.sendMessage(color + SimpleClans.getInstance().getClanManager().getClan(args[0]).getName()
-                            + "has an average rating of " + (totalRating/totalNames));
+                            + " has an average rating of " + (totalRating/totalNames));
                 }else{
                     try{
                         int rating = this.pvpRatingTable.getPlayerRating(args[0].toLowerCase());

@@ -16,6 +16,7 @@ public class GearScore {
     private static double gearMax;
     private static double gearMin;
     private static int hardCap;
+    private static KillDB plugin;
     
     private final Player killer;
     private final int killerRating;
@@ -377,7 +378,8 @@ public class GearScore {
     	return results;
     }
     
-    public static void setUp(){
+    public static void setUp(KillDB plugin){
+        GearScore.plugin = plugin;
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream("plugins/StrikeDeath/config.properties"));
@@ -385,6 +387,7 @@ public class GearScore {
             gearMax = Double.parseDouble(properties.getProperty("gearMax"));
             gearMin = Double.parseDouble(properties.getProperty("gearMin"));
             hardCap = Integer.parseInt(properties.getProperty("hardCap"));
+            plugin.handleDeath.setChatTags(Boolean.parseBoolean(properties.getProperty("chatTags")));
         } catch (IOException e) {
             try {
                 Properties props = new Properties();
@@ -396,6 +399,7 @@ public class GearScore {
                 gearMin = 5.0;
                 props.setProperty("hardCap", "200");
                 hardCap = 200;
+                props.setProperty("chatTags", "true");
                 File f = new File("plugins/StrikeDeath/config.properties");
                 OutputStream out = new FileOutputStream( f );
                 props.store(out, "Initial file creation");
@@ -404,5 +408,9 @@ public class GearScore {
                 ex.printStackTrace();
             }
         }
+    }
+    
+    public static int getHardCap(){
+        return hardCap;
     }
 }

@@ -3,6 +3,7 @@ package com.c45y.KillDB.database;
 import com.avaje.ebean.Query;
 import com.c45y.KillDB.KillDB;
 import java.util.Map;
+import org.bukkit.ChatColor;
 
 public class PvPRatingTable {
 
@@ -28,37 +29,35 @@ public class PvPRatingTable {
 		
 		if (query != null){
 			try{
-                            PvPRating result = query.findUnique();
-                            if (result.getPlayerName().equalsIgnoreCase(player.toLowerCase())){
-                                return result.getRating();
-                            }else{
-                                return 500;
-                            }
-                        }catch(Exception ex){
-                            return 500;
-                        }
+                PvPRating result = query.findUnique();
+                if (result.getPlayerName().equalsIgnoreCase(player.toLowerCase())){
+                    return result.getRating();
+                }else{
+                    return 500;
+                }
+             }catch(Exception ex){
+                return 500;
+             }
 		}
-		
 		return rating;
 	}
 	
 	public void updatePlayerRating(String player, int newRating){
 		PvPRating pvprating;
 		try{
-                    Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player.toLowerCase()).query();
-		
-                    if (query != null){
-                            pvprating = query.findUnique();
-                            pvprating.setRating(newRating);
-                            plugin.getDatabase().save(pvprating);
-                    }
+            Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player.toLowerCase()).query();
+		    if (query != null){
+                pvprating = query.findUnique();
+                pvprating.setRating(newRating);
+                plugin.getDatabase().save(pvprating);
+            }
 		}catch(Exception ex){
 			pvprating = new PvPRating();
 			pvprating.setPlayerName(player.toLowerCase());
 			pvprating.setRating(newRating);
-                        plugin.getDatabase().save(pvprating);
+            plugin.getDatabase().save(pvprating);
 		}
-                updateTop5(player,newRating);
+        updateTop5(player,newRating);
 	}
         
         public void loadTop5(){
@@ -92,6 +91,8 @@ public class PvPRatingTable {
                 secondRating = firstRating;
                 first = player;
                 firstRating = rating;
+                plugin.getServer().broadcastMessage(ChatColor.GREEN + "There is a "
+                    + "new #1! Type \"/top5\" to see the list!");
             }else if(rating > secondRating && !player.equals(first)){
                 fifth = fourth;
                 fifthRating = fourthRating;
@@ -166,6 +167,8 @@ public class PvPRatingTable {
                 firstRating = secondRating;
                 second = tempName;
                 secondRating = tempRating;
+                plugin.getServer().broadcastMessage(ChatColor.GREEN + "There is a "
+                    + "new #1! Type \"/top5\" to see the list!");
             }
         }
 	
