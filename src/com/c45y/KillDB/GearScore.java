@@ -388,7 +388,8 @@ public class GearScore {
             gearMin = Double.parseDouble(properties.getProperty("gearMin"));
             hardCap = Integer.parseInt(properties.getProperty("hardCap"));
             plugin.handleDeath.setChatTags(Boolean.parseBoolean(properties.getProperty("chatTags")));
-        } catch (IOException e) {
+            plugin.deathStatTable.setDecayDays(Integer.parseInt(properties.getProperty("decayDays")));
+        } catch (Exception e) {
             try {
                 Properties props = new Properties();
                 props.setProperty("baseChange", "20.0");
@@ -400,6 +401,7 @@ public class GearScore {
                 props.setProperty("hardCap", "200");
                 hardCap = 200;
                 props.setProperty("chatTags", "true");
+                props.setProperty("decayDays", "14");
                 File f = new File("plugins/StrikeDeath/config.properties");
                 OutputStream out = new FileOutputStream( f );
                 props.store(out, "Initial file creation");

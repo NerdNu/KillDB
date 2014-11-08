@@ -9,7 +9,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -45,27 +44,28 @@ public class HandleDeath implements Listener
         Player player = event.getPlayer();
         PvPRating[] top5 = this.plugin.pvpRatingTable.top5();
         //Checks to see if the player is in the top5
-        if(player.getName().equalsIgnoreCase(top5[0].getPlayerName())|| 
+        if((player.getName().equalsIgnoreCase(top5[0].getPlayerName())|| 
                 player.getName().equalsIgnoreCase(top5[1].getPlayerName())||
                 player.getName().equalsIgnoreCase(top5[2].getPlayerName())||
                 player.getName().equalsIgnoreCase(top5[3].getPlayerName())||
-                player.getName().equalsIgnoreCase(top5[4].getPlayerName())){
+                player.getName().equalsIgnoreCase(top5[4].getPlayerName()))&&
+                chatTags){
             event.setCancelled(true);
             if(player.getName().equalsIgnoreCase(top5[0].getPlayerName())){
-                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "]" + "1st"
-                        + ChatColor.RESET + "<" + player.getName() + "> " + message);
+                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "1st"
+                        + ChatColor.RESET + "]" + "<" + player.getName() + "> " + message);
             }else if(player.getName().equalsIgnoreCase(top5[1].getPlayerName())){
-                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "]" + "2nd"
-                        + ChatColor.RESET + "<" + player.getName() + "> " + message);
+                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "2nd"
+                        + ChatColor.RESET + "]" + "<" + player.getName() + "> " + message);
             }else if(player.getName().equalsIgnoreCase(top5[2].getPlayerName())){
-                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "]" + "3rd"
-                        + ChatColor.RESET + "<" + player.getName() + "> " + message);
+                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "3rd"
+                        + ChatColor.RESET + "]" + "<" + player.getName() + "> " + message);
             }else if(player.getName().equalsIgnoreCase(top5[3].getPlayerName())){
-                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "]" + "4th"
-                        + ChatColor.RESET + "<" + player.getName() + "> " + message);
+                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "4th"
+                        + ChatColor.RESET + "]" + "<" + player.getName() + "> " + message);
             }else if(player.getName().equalsIgnoreCase(top5[4].getPlayerName())){
-                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "]" + "5th"
-                        + ChatColor.RESET + "<" + player.getName() + "> " + message);
+                plugin.getServer().broadcastMessage("[" + ChatColor.GREEN + "5th"
+                        + ChatColor.RESET + "]" + "<" + player.getName() + "> " + message);
             }
         }
     }

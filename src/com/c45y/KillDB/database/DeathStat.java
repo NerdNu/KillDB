@@ -32,7 +32,7 @@ public class DeathStat {
 	}
 	
 	public void setPlayerName(String playerName) {
-		this.playerName = playerName.toLowerCase();
+		this.playerName = playerName;
 	}
 	
 	public String getPlayerName() {
@@ -40,7 +40,7 @@ public class DeathStat {
 	}
 	
 	public void setKillerName(String killerName) {
-		this.killerName = killerName.toLowerCase();
+		this.killerName = killerName;
 	}
 	
 	public String getKillerName() {

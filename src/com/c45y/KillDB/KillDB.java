@@ -48,7 +48,7 @@ public class KillDB extends JavaPlugin
             if(commandLabel.equalsIgnoreCase("rating")){
                 if(args.length == 0){
                     try{
-                        int rating = this.pvpRatingTable.getPlayerRating(sender.getName().toLowerCase());
+                        int rating = this.pvpRatingTable.getPlayerRating(sender.getName());
                         ChatColor color;
                         if(rating < 350){
                             color = ChatColor.RED;
@@ -71,7 +71,7 @@ public class KillDB extends JavaPlugin
                     int totalNames = 0;
                     for(String name : names){
                         try{
-                           totalRating += this.pvpRatingTable.getPlayerRating(name.toLowerCase());
+                           totalRating += this.pvpRatingTable.getPlayerRating(name);
                            totalNames++;
                         }catch(Exception e){
                            totalRating += 500;
@@ -90,7 +90,7 @@ public class KillDB extends JavaPlugin
                             + " has an average rating of " + (totalRating/totalNames));
                 }else{
                     try{
-                        int rating = this.pvpRatingTable.getPlayerRating(args[0].toLowerCase());
+                        int rating = this.pvpRatingTable.getPlayerRating(args[0]);
                         ChatColor color;
                         if(rating < 350){
                             color = ChatColor.RED;
@@ -113,6 +113,19 @@ public class KillDB extends JavaPlugin
                 sender.sendMessage(ChatColor.GREEN + "3) " + top5[2].getPlayerName() + " has a rating of " + top5[2].getRating());
                 sender.sendMessage(ChatColor.GREEN + "4) " + top5[3].getPlayerName() + " has a rating of " + top5[3].getRating());
                 sender.sendMessage(ChatColor.GREEN + "5) " + top5[4].getPlayerName() + " has a rating of " + top5[4].getRating());
+            }else if(commandLabel.equalsIgnoreCase("ranking")){
+                if(args.length == 0){
+                    sender.sendMessage(ChatColor.YELLOW + "You're in " + this.pvpRatingTable.ranking(sender.getName().toString()));
+                }else{
+                    try{
+                        String name = this.getDatabase().find(PvPRating.class).where().ieq("playerName", args[0]).findUnique().getPlayerName();
+                        sender.sendMessage(ChatColor.YELLOW + name + " is " + this.pvpRatingTable.ranking(name));
+                    }catch(Exception e){
+                        sender.sendMessage(ChatColor.YELLOW + "That name is not in the "
+                                + "database. They must have been in a PvP encounter "
+                                + "to be ranked!");
+                    }
+                }
             }
             return true;
         }

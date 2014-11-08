@@ -24,13 +24,12 @@ public class PvPRatingTable {
 	}
 
 	public int getPlayerRating(String player){
-		int rating = 500;
-		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player.toLowerCase()).query();
+		Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player).query();
 		
 		if (query != null){
 			try{
                 PvPRating result = query.findUnique();
-                if (result.getPlayerName().equalsIgnoreCase(player.toLowerCase())){
+                if (result.getPlayerName().equalsIgnoreCase(player)){
                     return result.getRating();
                 }else{
                     return 500;
@@ -39,21 +38,24 @@ public class PvPRatingTable {
                 return 500;
              }
 		}
-		return rating;
+		return 500;
 	}
 	
 	public void updatePlayerRating(String player, int newRating){
 		PvPRating pvprating;
 		try{
-            Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player.toLowerCase()).query();
+            Query<PvPRating> query = plugin.getDatabase().find(PvPRating.class).where().ieq("playerName", player).query();
 		    if (query != null){
                 pvprating = query.findUnique();
                 pvprating.setRating(newRating);
+                if(!player.equals(pvprating.getPlayerName())){
+                    pvprating.setPlayerName(player);
+                }
                 plugin.getDatabase().save(pvprating);
             }
 		}catch(Exception ex){
 			pvprating = new PvPRating();
-			pvprating.setPlayerName(player.toLowerCase());
+			pvprating.setPlayerName(player);
 			pvprating.setRating(newRating);
             plugin.getDatabase().save(pvprating);
 		}
@@ -70,17 +72,23 @@ public class PvPRatingTable {
         public void updateTop5(String player, int rating){
             if(player.equalsIgnoreCase(first)||player.equalsIgnoreCase(second)||player.equalsIgnoreCase(third)||player.equalsIgnoreCase(fourth)||player.equalsIgnoreCase(fifth)){
                 if(player.equalsIgnoreCase(first)){
+                    first = player;
                     firstRating = rating;
                 }else if(player.equalsIgnoreCase(second)){
+                    second = player;
                     secondRating = rating;
                 }else if(player.equalsIgnoreCase(third)){
+                    third = player;
                     thirdRating = rating;
                 }else if(player.equalsIgnoreCase(fourth)){
+                    fourth = player;
                     fourthRating = rating;
                 }else if(player.equalsIgnoreCase(fifth)){
+                    fifth = player;
                     fifthRating = rating;
                 }
-            }else if(rating > firstRating){
+            }
+            if(rating > firstRating){
                 fifth = fourth;
                 fifthRating = fourthRating;
                 fourth = third;
@@ -170,6 +178,49 @@ public class PvPRatingTable {
                 plugin.getServer().broadcastMessage(ChatColor.GREEN + "There is a "
                     + "new #1! Type \"/top5\" to see the list!");
             }
+        }
+    
+        public String ranking(String name){
+            if(name.equalsIgnoreCase(first)||name.equalsIgnoreCase(second)||name.equalsIgnoreCase(third)
+                    ||name.equalsIgnoreCase(fourth)||name.equalsIgnoreCase(fifth)){
+                int total = plugin.getDatabase().find(PvPRating.class).findRowCount();
+                if(name.equalsIgnoreCase(first)){
+                    return "1st out of " + total;
+                }else if(name.equalsIgnoreCase(second)){
+                    return "2nd out of " + total;
+                }else if(name.equalsIgnoreCase(third)){
+                    return "3rd out of " + total;
+                }else if(name.equalsIgnoreCase(fourth)){
+                    return "4th out of " + total;
+                }else if(name.equalsIgnoreCase(fifth)){
+                    return "5th out of " + total;
+                }
+            }else{
+                int greater = plugin.getDatabase().find(PvPRating.class).where().gt("rating", getPlayerRating(name)).findRowCount();
+                int total = plugin.getDatabase().find(PvPRating.class).where().findRowCount();
+                if(greater<6){
+                    return "6th out of " + total;
+                }else{
+                    int ending = greater;
+                    if(greater>20){
+                        while(ending>9){
+                            ending -= 10;
+                        }
+                        if(ending == 0){
+                            return (greater+1) + "st out of " + total;
+                        }else if(ending == 1){
+                            return (greater+1) + "nd out of " + total;
+                        }else if(ending == 2){
+                            return (greater+1) + "rd out of " + total;
+                        }else{
+                            return (greater+1) + "th out of " + total;
+                        }
+                    }else{
+                        return (greater+1) + "th out of " + total;
+                    }
+                }
+            }
+            return "";
         }
 	
 	public PvPRating getRequest(int id) {

@@ -25,7 +25,7 @@ public class PvPRating {
 	}
 	
 	public void setPlayerName(String playerName) {
-		this.playerName = playerName.toLowerCase();
+		this.playerName = playerName;
 	}
 	
 	public String getPlayerName() {
